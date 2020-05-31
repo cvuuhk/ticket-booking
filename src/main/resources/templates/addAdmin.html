@@ -36,16 +36,12 @@
                 }
                 console.log("send");
                 axios
-                    .post(`/register`, {
+                    .post(`/root/addAdmin`, {
                         name: this.userName,
                         password: this.userPassword
                     })
                     .then(response => {
-                        if (confirm(response.data + "返回主页？")) {
-                            window.location.href = "/";
-                        } else {
-                            alert("为啥不返回主页？");
-                        }
+                        alert(response.data);
                     })
                     .catch(err => alert(err))
 
