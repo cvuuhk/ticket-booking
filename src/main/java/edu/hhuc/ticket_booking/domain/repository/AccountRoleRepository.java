@@ -1,5 +1,6 @@
-package edu.hhuc.ticket_booking.domain;
+package edu.hhuc.ticket_booking.domain.repository;
 
+import edu.hhuc.ticket_booking.domain.entity.AccountRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

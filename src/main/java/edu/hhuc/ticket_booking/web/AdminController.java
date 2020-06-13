@@ -1,25 +1,44 @@
 package edu.hhuc.ticket_booking.web;
-import edu.hhuc.ticket_booking.domain.Account;
+import edu.hhuc.ticket_booking.domain.entity.Product;
+import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
 import edu.hhuc.ticket_booking.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 @Controller
+@RequestMapping(value = "/admin")
 public class AdminController{
     @Autowired
-    AdminService adminService;
+    AdminService      adminService;
+    @Autowired
+    ProductRepository repository;
     
-    @GetMapping(value = "/root")
-    public String init(){ return "root"; }
+    @GetMapping(value = "")
+    public String initAdmin(){return "admin";}
     
-    @PostMapping(value = "/root")
-    public ResponseEntity<String> register(@RequestBody Account account){
-        adminService.register(account);
-        return new ResponseEntity<>("success", HttpStatus.OK);
+    @GetMapping(value = "/getAllProduct")
+    public ResponseEntity<List<Product>> getAllProduct(){
+        return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
     
-    @GetMapping(value = "/admin")
-    public String admin(){return "admin";}
+    @PostMapping(value = "")
+    public void addProduct(@RequestBody Product product){
+        repository.save(product);
+    }
+    
+    @PutMapping(value = "")
+    public void updateProduct(@RequestBody Product product){
+        repository.save(product);
+    }
+    
+    @DeleteMapping(value = "")
+    public void deleteProduct(@RequestBody Integer productId){
+        Product product = repository.findProductById(productId);
+        product.setDown(true);
+        repository.save(product);
+    }
 }

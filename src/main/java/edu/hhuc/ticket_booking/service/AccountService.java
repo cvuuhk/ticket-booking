@@ -1,8 +1,8 @@
 package edu.hhuc.ticket_booking.service;
-import edu.hhuc.ticket_booking.domain.Account;
-import edu.hhuc.ticket_booking.domain.AccountRepository;
-import edu.hhuc.ticket_booking.domain.AccountRole;
-import edu.hhuc.ticket_booking.domain.AccountRoleRepository;
+import edu.hhuc.ticket_booking.domain.entity.Account;
+import edu.hhuc.ticket_booking.domain.repository.AccountRepository;
+import edu.hhuc.ticket_booking.domain.entity.AccountRole;
+import edu.hhuc.ticket_booking.domain.repository.AccountRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,7 +34,6 @@ public class AccountService implements UserDetailsService{
         accountRole.setAccountId(account.getId());
         accountRole.setTimestamp(account.getRegisterTime());
         accountRoleRepository.save(accountRole);
-        System.out.println();
         
         return "success";
     }

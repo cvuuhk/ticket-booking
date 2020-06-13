@@ -1,4 +1,4 @@
-package edu.hhuc.ticket_booking.domain;
+package edu.hhuc.ticket_booking.domain.entity;
 
 import lombok.Data;
 

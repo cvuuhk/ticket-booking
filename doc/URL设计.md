@@ -6,18 +6,31 @@
 - admin：管理员，由超级管理员设定
 - root：超级管理员，只有一名
 
-| URL            | 权限限制 | 说明                                         |
-| -------------- | -------- | -------------------------------------------- |
-| /              | *        | 主页，普通用户登录后跳转至此                 |
-| /login         | *        | 登录界面，成功登录则根据权限自动跳转相应页面 |
-| /register      | *        | 用户注册界面，注册成功后跳转主页             |
-| /product       | *        | 产品详情页面                                 |
-| /user          | user     | 用户个人信息页面                             |
-| /buy           | user     | 购票，下订单页面                             |
-| /ticket        | user     | 订单详情页面                                 |
-| /admin         | admin    | 商品管展示页面，管理员登录后默认跳转至此     |
-| /admin/product | admin    | 商品维护页面，对特定商品进行信息维护         |
-| /statistic     | admin    | 统计页面，查看相关统计数据                   |
-| /root          | root     | 管理员主页，超级管理员登录后默认跳转至此     |
-| /root/addAdmin | root     | 管理员信息维护页面，对特定管理员进行信息维护 |
+| URL                  | 角色要求 | 方法   | 作用                                         |
+| -------------------- | -------- | ------ | -------------------------------------------- |
+| /                    | *        | get    | 主页，普通用户登录后跳转至此                 |
+| /register            | *        | get    | 用户注册界面，注册成功后跳转主页             |
+| /login               | *        | get    | 登录界面，成功登录则根据权限自动跳转相应页面 |
+| /dologin             | *        | post   | 发送登录请求                                 |
+| /product/{productId} | *        | get    | 产品详情页面                                 |
+| /user                | user     | get    | 访问用户个人信息页面                         |
+| /user                | user     | put    | 更新用户个人信息                             |
+| /user/unregister     | user     | post   | 删除账户，要求密码验证                       |
+| /user/real           | user     | get    | 访问实名认证页面                             |
+| /user/real           | user     | post   | 新建实名认证信息                             |
+| /user/real           | user     | put    | 更新实名认证信息                             |
+| /user/real           | user     | delete | 删除实名认证信息                             |
+| /user/buy            | user     | get    | 进行选座等操作                               |
+| /user/buy            | user     | post   | 提交订单信息，要求密码验证                   |
+| /user/ticket         | user     | get    | 查看订单列表                                 |
+|                      |          |        |                                              |
+| /admin               | admin    | get    | 访问商品管展示页面，管理员登录后默认跳转至此 |
+| /admin               | admin    | post   | 新增商品条目                                 |
+| /admin               | admin    | delete | 删除商品条目                                 |
+| /admin               | admin    | put    | 更新商品条目                                 |
+| /root                | root     | get    | 访问管理员主页，超级管理员登录后默认跳转至此 |
+| /root                | root     | post   | 新增管理员                                   |
+| /root                | root     | delete | 删除管理员                                   |
+| /root                | root     | put    | 更新管理员信息                               |
+| /statistic           | admin    | get    | 访问统计页面                                 |
 
