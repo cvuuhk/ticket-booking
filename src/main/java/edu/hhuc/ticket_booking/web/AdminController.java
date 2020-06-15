@@ -21,6 +21,7 @@ public class AdminController{
     public String initAdmin(){return "admin";}
     
     @GetMapping(value = "/getAllProduct")
+    @ResponseBody
     public ResponseEntity<List<Product>> getAllProduct(){
         return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }

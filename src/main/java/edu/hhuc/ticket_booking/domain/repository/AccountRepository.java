@@ -16,4 +16,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer>, JpaS
             "and r.name='ROLE_admin'")
     List<Account> findAdmins();
     void deleteById(Integer id);
+    Account findAccountById(Integer id);
 }

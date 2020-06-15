@@ -42,11 +42,13 @@ public class RootController{
     }
     
     @GetMapping(value = "/admins")
+    @ResponseBody
     public ResponseEntity<List<Account>> getAdmins(){
         return new ResponseEntity<>(service.getAdmins(), HttpStatus.OK);
     }
     
     @PutMapping(value = "/updateRootPassword")
+    @ResponseBody
     public ResponseEntity<String> updateRootPassword(@RequestBody String raw){
         return new ResponseEntity<>(service.updateRootPassword(raw), HttpStatus.OK);
     }

@@ -1,41 +1,81 @@
 package edu.hhuc.ticket_booking.web;
+import edu.hhuc.ticket_booking.domain.entity.Account;
+import edu.hhuc.ticket_booking.domain.entity.Product;
+import edu.hhuc.ticket_booking.domain.entity.Real;
+import edu.hhuc.ticket_booking.domain.entity.Ticket;
+import edu.hhuc.ticket_booking.domain.repository.AccountRepository;
+import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
+import edu.hhuc.ticket_booking.domain.repository.RealRepository;
+import edu.hhuc.ticket_booking.domain.repository.TicketRepository;
 import edu.hhuc.ticket_booking.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 @Controller
 @RequestMapping(value = "/user")
 public class AccountController{
     @Autowired
-    AccountService accountService;
+    AccountService    accountService;
+    @Autowired
+    AccountRepository accountRepository;
+    @Autowired
+    RealRepository    realRepository;
+    @Autowired
+    TicketRepository  ticketRepository;
+    @Autowired
+    ProductRepository productRepository;
     
     @GetMapping(value = "")
     public String initUser(){return "user";}
     
     @PutMapping(value = "")
-    public void updateUser(){ }
+    public void updateUser(@RequestBody Account account){
+        accountRepository.save(account);
+    }
     
     @PostMapping(value = "/unregister")
-    public void unregister(){}
+    public void unregister(@RequestBody Account account){
+        account.setEnabled(false);
+        accountRepository.save(account);
+    }
     
     @GetMapping(value = "/real")
-    public void initReal(){}
+    public String initReal(){return "real";}
     
     @PostMapping(value = "/real")
-    public void addReal(){}
+    public void addReal(@RequestBody Real real){
+        realRepository.save(real);
+    }
     
     @PutMapping(value = "/real")
-    public void updateReal(){}
+    public void updateReal(@RequestBody Real real){
+        realRepository.save(real);
+    }
     
     @DeleteMapping(value = "/real")
-    public void deleteReal(){}
+    public void deleteReal(@RequestBody Integer id){
+        realRepository.deleteById(id);
+    }
     
     @GetMapping(value = "/buy")
-    public void initBuy(){}
+    @ResponseBody
+    public ResponseEntity<Product> initBuy(@RequestBody Integer productId){
+        return new ResponseEntity<>(productRepository.findProductById(productId), HttpStatus.OK);
+    }
     
     @PostMapping(value = "/buy")
-    public void buy(){}
+    public void buy(@RequestBody Ticket ticket){
+        ticketRepository.save(ticket);
+    }
     
-    @GetMapping(value = "/ticket")
-    public void getTicket(){}
+    @PostMapping(value = "/ticket")
+    @ResponseBody
+    public ResponseEntity<List<Ticket>> getTicket(@RequestBody Integer accountId){
+        List<Ticket> tickets = ticketRepository.findAllByAccountId(accountId);
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
 }
