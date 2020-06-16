@@ -3,7 +3,6 @@ package edu.hhuc.ticket_booking.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 账户_角色表
@@ -27,7 +26,7 @@ public class AccountRole {
      * 授权时间
      */
     @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timestamp;
+    private Long timestamp;
 
     
 }

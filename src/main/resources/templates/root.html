@@ -3,8 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <title>ROOT界面</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-ROOT
+<details>
+    <summary>修改 root 密码</summary>
+    <form method="post" action="/root/updateRootPassword">
+        <label for="newPassword">新密码：</label>
+        <input type="password" id="newPassword" name="password">
+        <input type="submit" value="提交">
+    </form>
+</details>
+<div id="add">
+    <details>
+        <summary>添加管理员</summary>
+        <form @submit="submitMessage">
+            <div><label>姓名：<input v-model="name"></label></div>
+            <div><label>密码：<input v-model="password" type="password"></label>
+            </div>
+            <div><label>联系方式：<input v-model="email"></label></div>
+            <div><label>是否启用：
+                <input v-model="enabled" type="radio" name="enabled"
+                       value="true">是
+                <input v-model="enabled" type="radio" name="enabled"
+                       value="false">否
+            </label></div>
+            <div><input value="添加" type="submit"></div>
+        </form>
+    </details>
+</div>
+<div id="modify">
+    <details v-for="(admin, index) in admins" :key="index">
+        <summary>{{admin.name}}</summary>
+        <form @submit.prevent="update(index)">
+            <p>id:{{admin.id}}</p>
+            <div><label>姓名：<input v-model="admin.name"></label></div>
+            <div><label> 密码：<input type="password"
+                                   v-model="admin.password"></label></div>
+            <div><label>联系人：<input v-model="admin.email"></label></div>
+            <p>授权时间：{{admin.registerTime}}</p>
+            <div><label>账户是否过期：<input v-model="admin.accountExpired"></label>
+            </div>
+            <div><label>账户是否被锁定：<input v-model="admin.locked"></label></div>
+            <div><label>账户是否可用：<input v-model="admin.enabled"></label></div>
+            <div>
+                <input value="提交" type="submit">
+            </div>
+        </form>
+        <button @click="deleteAdmin(admin.id)">删除</button>
+    </details>
+</div>
+
+<script>
+    const add = new Vue({
+        el: "#add",
+        data: {
+            name: "",
+            password: "",
+            email: "",
+            registerTime: "",
+            enabled: ""
+        },
+        methods: {
+            submitMessage: function () {
+                this.registerTime = new Date().getTime();
+                axios.post(`/root/`, this.$data)
+                    .then(resp => {
+                        console.log(resp.data);
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                    })
+            }
+        }
+    });
+
+    const modifyOrDelete = new Vue({
+        el: "#modify",
+        data: {
+            admins: []
+        },
+        methods: {
+            update: function (i) {
+                delete this.admins[i].authorities;
+                axios.put(`/root/`, this.admins[i])
+                    .then(resp => {
+                        alert(resp.data);
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                    })
+            },
+            deleteAdmin: function (id) {
+                axios.delete(`/root/${id}`).then(resp => {
+                    location.reload();
+                })
+            }
+        },
+        mounted: function () {
+            axios
+                .get(`root/admins`)
+                .then(response => {
+                    this.admins = response.data;
+                })
+        }
+
+    });
+</script>
 </body>
 </html>

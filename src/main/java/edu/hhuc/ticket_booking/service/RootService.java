@@ -34,6 +34,7 @@ public class RootService{
         String  password = new BCryptPasswordEncoder().encode(raw);
         Account root     = accountRepository.findAccountByName("root");
         root.setPassword(password);
+        accountRepository.save(root);
         return "success";
     }
 }

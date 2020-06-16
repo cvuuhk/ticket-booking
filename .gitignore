@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 src/main/resources/application-database.properties
 src/main/java/edu/hhuc/ticket_booking/Main.java
+src/main/resources/templates/test.html
 
 ### STS ###
 .apt_generated

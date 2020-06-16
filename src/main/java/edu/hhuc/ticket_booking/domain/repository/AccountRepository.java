@@ -13,7 +13,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer>, JpaS
             "from Account a,AccountRole ar,Role r "+
             "where a.id = ar.accountId "+
             "and r.id = ar.roleId "+
-            "and r.name='ROLE_admin'")
+            "and r.name='ROLE_admin'"+
+            "order by a.id")
     List<Account> findAdmins();
     void deleteById(Integer id);
     Account findAccountById(Integer id);

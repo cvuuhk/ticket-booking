@@ -3,7 +3,6 @@ package edu.hhuc.ticket_booking.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 订单表
@@ -24,7 +23,7 @@ public class Ticket {
     private String realName;
 
     @Column(name = "create_time", nullable = false)
-    private LocalDateTime createTime;
+    private Long createTime;
 
     @Column(name = "status", nullable = false)
     private Integer status;
