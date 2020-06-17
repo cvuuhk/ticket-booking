@@ -3,7 +3,6 @@ package edu.hhuc.ticket_booking.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,10 +24,10 @@ public class ProductSession{
     private Integer cityId;
     
     @Column(name = "detail_position")
-    private Integer detailPosition = null;
+    private String detailPosition = null;
     
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private Long startTime;
     
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "session_level",

@@ -3,8 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <title>管理员界面</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-Admin
+<div id="app">
+    <details>
+        <summary>添加商品信息</summary>
+        <form @submit.prevent="submitNewProduct">
+            <div>
+                <label for="Addtitle">标题：</label>
+                <input v-model="title" id="Addtitle">
+            </div>
+            <div>
+                <label for="Adddetails">演出介绍：</label>
+                <input v-model="details" id="Adddetails">
+            </div>
+            <div>
+                <label>是否下架：
+                    <input v-model="down" type="radio" value="true">否
+                    <input v-model="down" type="radio" value="false">下架
+                </label>
+            </div>
+            <div>
+                <label for="Addduration">演出时长：</label>
+                <input v-model="duration" id="Addduration">
+            </div>
+            <div>
+                <label for="AddstartTime">入场时间：</label>
+                <input v-model="startTime" id="AddstartTime">
+            </div>
+            <div>
+                <label for="AddtrackNumber">最低演出曲目：</label>
+                <input v-model="trackNumber" id="AddtrackNumber">
+            </div>
+            <div>
+                <label for="Addsinger">主要演员：</label>
+                <input v-model="singer" id="Addsinger">
+            </div>
+            <div>
+                <label for="AddminimumDuration">最低演出时长：</label>
+                <input v-model="minimumDuration" id="AddminimumDuration">
+            </div>
+            <div>
+                <label for="AddprohibitedItem">禁止携带物品：</label>
+                <textarea v-model="prohibitedItem"
+                          id="AddprohibitedItem"></textarea>
+            </div>
+            <div>
+                <label for="AdddepositInstructions">寄存说明：</label>
+                <input v-model="depositInstructions"
+                       id="AdddepositInstructions">
+            </div>
+            <div>
+                <label for="AddinitialTicketNumber">初始开售时全场可售门票总张数：</label>
+                <input v-model="initialTicketNumber"
+                       id="AddinitialTicketNumber">
+            </div>
+            <div>
+                <input type="submit" value="提交修改">
+            </div>
+        </form>
+    </details>
+    <details v-for="(product, index) in products" :key="index">
+        <summary>{{product.title}}</summary>
+        <form @submit.prevent="submitUpdate(index)">
+            <div>
+                id：{{product.id}}
+            </div>
+            <div>
+                <label for="title">标题：</label>
+                <input v-model="product.title" id="title">
+            </div>
+            <div>
+                <label for="details">演出介绍：</label>
+                <input v-model="product.details" id="details">
+            </div>
+<!--            <div>-->
+<!--                <label for="down">是否下架：</label>-->
+<!--                <input v-model="product.down" id="down">-->
+<!--            </div>-->
+            <div>
+                <label for="duration">演出时长：</label>
+                <input v-model="product.duration" id="duration">
+            </div>
+            <div>
+                <label for="startTime">入场时间：</label>
+                <input v-model="product.startTime" id="startTime">
+            </div>
+            <div>
+                <label for="trackNumber">最低演出曲目：</label>
+                <input v-model="product.trackNumber" id="trackNumber">
+            </div>
+            <div>
+                <label for="singer">主要演员：</label>
+                <input v-model="product.singer" id="singer">
+            </div>
+            <div>
+                <label for="minimumDuration">最低演出时长：</label>
+                <input v-model="product.minimumDuration" id="minimumDuration">
+            </div>
+            <div>
+                <label for="prohibitedItem">禁止携带物品：</label>
+                <textarea v-model="product.prohibitedItem"
+                          id="prohibitedItem"></textarea>
+            </div>
+            <div>
+                <label for="depositInstructions">寄存说明：</label>
+                <input v-model="product.depositInstructions"
+                       id="depositInstructions">
+            </div>
+            <div>
+                <label for="initialTicketNumber">初始开售时全场可售门票总张数：</label>
+                <input v-model="product.initialTicketNumber"
+                       id="initialTicketNumber">
+            </div>
+            <div>
+                <input type="submit" value="提交修改">
+            </div>
+        </form>
+        <button @click="submitDelete(product.id)">下架</button>
+        <a :href="'/admin/session/'+product.id">
+            <button>修改场次</button>
+        </a>
+    </details>
+</div>
+
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            id: "",
+            title: "",
+            details: "",
+            down: "",
+            duration: "",
+            startTime: "",
+            trackNumber: "",
+            singer: "",
+            minimumDuration: "",
+            prohibitedItem: "",
+            depositInstructions: "",
+            initialTicketNumber: "",
+            products: []
+        },
+        methods: {
+            submitNewProduct: function () {
+                let obj = this.$data;
+                delete obj.products;
+                axios.post(`/admin`, obj)
+                    .then(resp => {
+                        console.log("add")
+                    })
+            },
+            submitUpdate: function (index) {
+                axios.put(`/admin`, this.products[index])
+                    .then(resp => {
+                        console.log(resp.data);
+                    })
+            },
+            submitDelete: function (productId) {
+                axios.delete(`/admin/${productId}`)
+                    .then(resp => {
+                        console.log(resp.data);
+                    })
+            }
+        },
+        mounted: function () {
+            axios.get(`/admin/getAllProduct`)
+                .then(resp => {
+                    this.products = resp.data;
+                })
+        }
+    });
+</script>
 </body>
 </html>

@@ -42,13 +42,13 @@ public class Product{
      * 演出时长
      */
     @Column(name = "duration", nullable = false)
-    private String duration = "'以现场为准'";
+    private String duration = "以现场为准";
     
     /**
      * 入场时间
      */
     @Column(name = "start_time", nullable = false)
-    private String startTime = "'请于开始前约 90 分钟入场'";
+    private String startTime = "请于开始前约 90 分钟入场";
     
     /**
      * 最低演出曲目
@@ -66,19 +66,19 @@ public class Product{
      * 最低演出时长
      */
     @Column(name = "minimum_duration", nullable = false)
-    private String minimumDuration = "'以现场为准'";
+    private String minimumDuration = "以现场为准";
     
     /**
      * 禁止携带物品
      */
     @Column(name = "prohibited_item", nullable = false)
-    private String prohibitedItem = "'由于安保和版权的原因，大多数演出、展览及比赛场所禁止携带食品、饮料、专业摄录设备、打火机等物品，请您注意现场工作人员和广播的提示，予以配合。'";
+    private String prohibitedItem = "由于安保和版权的原因，大多数演出、展览及比赛场所禁止携带食品、饮料、专业摄录设备、打火机等物品，请您注意现场工作人员和广播的提示，予以配合。";
     
     /**
      * 寄存说明
      */
     @Column(name = "deposit_Instructions", nullable = false)
-    private String depositInstructions = "'无寄存处，请自行保管携带物品，谨防贵重物品丢失。'";
+    private String depositInstructions = "无寄存处，请自行保管携带物品，谨防贵重物品丢失。";
     
     /**
      * 初始开售时全场可售卖门票总张数

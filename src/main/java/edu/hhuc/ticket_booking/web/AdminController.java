@@ -1,5 +1,6 @@
 package edu.hhuc.ticket_booking.web;
 import edu.hhuc.ticket_booking.domain.entity.Product;
+import edu.hhuc.ticket_booking.domain.entity.ProductSession;
 import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
 import edu.hhuc.ticket_booking.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AdminController{
     @GetMapping(value = "/getAllProduct")
     @ResponseBody
     public ResponseEntity<List<Product>> getAllProduct(){
-        return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(repository.findAllAvaliableProduct(), HttpStatus.OK);
     }
     
     @PostMapping(value = "")
@@ -32,14 +33,22 @@ public class AdminController{
     }
     
     @PutMapping(value = "")
-    public void updateProduct(@RequestBody Product product){
+    public ResponseEntity<String> updateProduct(@RequestBody Product product){
         repository.save(product);
+        return new ResponseEntity<>("修改成功", HttpStatus.OK);
     }
     
-    @DeleteMapping(value = "")
-    public void deleteProduct(@RequestBody Integer productId){
+    @DeleteMapping(value = "/{productId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Integer productId){
         Product product = repository.findProductById(productId);
         product.setDown(true);
         repository.save(product);
+        return new ResponseEntity<>("删除成功", HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/session/{productId}")
+    public ResponseEntity<List<ProductSession>> getSessions(@PathVariable Integer productId){
+        List<ProductSession> productSessionList = repository.findProductById(productId).getProductSessionList();
+        return new ResponseEntity<>(productSessionList, HttpStatus.OK);
     }
 }
