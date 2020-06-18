@@ -21,7 +21,8 @@
             </div>
             <div>
                 <label>是否下架：
-                    <input v-model="down" type="radio" value="false" name="down">否
+                    <input v-model="down" type="radio" value="false"
+                           name="down">否
                     <input v-model="down" type="radio" value="true" name="down">下架
                 </label>
             </div>
@@ -122,10 +123,11 @@
                 <input type="submit" value="提交修改">
             </div>
         </form>
-        <button @click="submitDelete(product.id)">下架</button>
+        <button @click="downProduct(product.id)">下架</button>
         <a :href="'/admin/session/'+product.id">
             <button>修改场次</button>
         </a>
+        <button @click="deleteProduct(product.id)">删除</button>
     </details>
 </div>
 
@@ -162,8 +164,14 @@
                         console.log(resp.data);
                     })
             },
-            submitDelete: function (productId) {
+            downProduct: function (productId) {
                 axios.delete(`/admin/${productId}`)
+                    .then(resp => {
+                        console.log(resp.data);
+                    })
+            },
+            deleteProduct: function (productId) {
+                axios.delete(`/admin/delete/${productId}`)
                     .then(resp => {
                         console.log(resp.data);
                     })

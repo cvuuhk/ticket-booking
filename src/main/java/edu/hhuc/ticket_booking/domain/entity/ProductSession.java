@@ -29,12 +29,12 @@ public class ProductSession{
     @Column(name = "start_time", nullable = false)
     private Long startTime;
     
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "productSessionId")
     //@JoinTable(name = "session_level",
     //        joinColumns = {@JoinColumn(name = "id")},
     //        inverseJoinColumns = {@JoinColumn(name = "product_session_id")}
     //)
-    @JoinColumn(name = "product_session_id")
+    //@JoinColumn(name = "product_session_id")
     private List<SessionLevel> sessionLevelList;
     
     @OneToOne(fetch = FetchType.EAGER)

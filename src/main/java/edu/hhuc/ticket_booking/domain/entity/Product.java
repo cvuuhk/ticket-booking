@@ -86,11 +86,11 @@ public class Product{
     @Column(name = "initial_ticket_number", nullable = false)
     private String initialTicketNumber;
     
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productId")
     //@JoinTable(name = "product_session",
     //        joinColumns = {@JoinColumn(name = "id")},
     //        inverseJoinColumns = {@JoinColumn(name = "product_id")}
     //)
-    @JoinColumn(name = "product_id")
+    //@JoinColumn(name = "product_id")
     private List<ProductSession> productSessionList;
 }

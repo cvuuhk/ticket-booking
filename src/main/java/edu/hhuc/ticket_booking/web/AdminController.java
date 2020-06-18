@@ -55,10 +55,17 @@ public class AdminController{
     
     @DeleteMapping(value = "/{productId}")
     @ResponseBody
-    public ResponseEntity<String> deleteProduct(@PathVariable Integer productId){
+    public ResponseEntity<String> downProduct(@PathVariable Integer productId){
         Product product = productRepository.findProductById(productId);
         product.setDown(true);
         productRepository.save(product);
+        return new ResponseEntity<>("下架成功", HttpStatus.OK);
+    }
+    
+    @DeleteMapping(value = "/delete/{productId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteProduct(@PathVariable Integer productId){
+        productRepository.deleteById(productId);
         return new ResponseEntity<>("删除成功", HttpStatus.OK);
     }
     

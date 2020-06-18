@@ -11,7 +11,7 @@
     <details>
         <summary>添加场次</summary>
         <form @submit.prevent="submitAddMessage">
-            <label for="addprovince">更改站点</label>
+            <label for="addprovince">站点</label>
             <select id="addprovince" v-model="provinceCode"
                     @change="getCities(provinceCode)">
                 <option v-for="province in provinces"

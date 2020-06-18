@@ -33,11 +33,11 @@ public class SessionLevel{
     @Column(name = "price", nullable = false)
     private BigDecimal price;
     
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionLevelId")
     //@JoinTable(name = "level_seat",
     //        joinColumns = {@JoinColumn(name = "id")},
     //        inverseJoinColumns = {@JoinColumn(name = "session_level_id")}
     //)
-    @JoinColumn(name = "session_level_id")
+    //@JoinColumn(name = "session_level_id")
     private List<LevelSeat> levelSeatList;
 }
