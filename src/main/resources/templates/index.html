@@ -7,13 +7,22 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div>
-
+<div id="app">
+    <details v-for="product in products">
+        <summary>{{product.title}}</summary>
+    </details>
 </div>
 <script>
     const app = new Vue({
-        el: "",
-        data: {}
+        el: "#app",
+        data: {
+            products: []
+        },
+        mounted: function () {
+            throw axios.get(`/product`).then(resp => {
+                this.products = resp.data;
+            })
+        }
     });
 </script>
 </body>

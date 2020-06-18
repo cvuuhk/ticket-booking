@@ -8,10 +8,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 @Controller
 public class ProductController{
     @Autowired
     ProductRepository repository;
+    
+    @GetMapping(value = "/product")
+    public ResponseEntity<List<Product>> index(){
+        return new ResponseEntity<>(repository.findAllAvaliableProduct(), HttpStatus.OK);
+    }
     
     @GetMapping(value = "/product/{productId}")
     @ResponseBody

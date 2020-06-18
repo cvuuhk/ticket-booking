@@ -20,8 +20,8 @@ public class ProductSession{
     @Column(name = "product_id", nullable = false)
     private Integer productId;
     
-    @Column(name = "city_id", nullable = false)
-    private Integer cityId;
+    //@Column(name = "city_id", nullable = false)
+    //private Integer cityId;
     
     @Column(name = "detail_position")
     private String detailPosition = null;
@@ -30,9 +30,14 @@ public class ProductSession{
     private Long startTime;
     
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "session_level",
-            joinColumns = {@JoinColumn(name = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_session_id")}
-    )
+    //@JoinTable(name = "session_level",
+    //        joinColumns = {@JoinColumn(name = "id")},
+    //        inverseJoinColumns = {@JoinColumn(name = "product_session_id")}
+    //)
+    @JoinColumn(name = "product_session_id")
     private List<SessionLevel> sessionLevelList;
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id",referencedColumnName = "CITY_ID")
+    private City city;
 }

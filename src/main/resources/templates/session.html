@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>修改场次</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <details>
+        <summary>添加场次</summary>
+        <form @submit.prevent="submitAddMessage">
+            <label for="addprovince">更改站点</label>
+            <select id="addprovince" v-model="provinceCode"
+                    @change="getCities(provinceCode)">
+                <option v-for="province in provinces"
+                        :value="province.provinceCode">
+                    {{province.provinceName}}
+                </option>
+            </select>
+            <label for="addcity"></label>
+            <select id="addcity" v-model="cityIndex">
+                <option v-for="(city, indexCity) in cities"
+                        :value="indexCity" :key="indexCity">
+                    {{city.cityName}}
+                </option>
+            </select>
+            <div>
+                <label for="adddetailPosition">详细地址</label>
+                <input id="adddetailPosition"
+                       v-model="sessionToAdd.detailPosition">
+            </div>
+            <div>
+                <label for="addstartTime">开始时间</label>
+                <input id="addstartTime" v-model="sessionToAdd.startTime">
+            </div>
+            <input type="submit" value="添加">
+        </form>
+    </details>
+    <details v-for="(session, index) in sessions" :key="index">
+        <summary>{{session.city.shortName}}站</summary>
+        <form @submit.prevent="updateSession(index)">
+            <div>
+                <label for="province">更改站点</label>
+                <select id="province" v-model="provinceCode"
+                        @change="getCities(provinceCode)">
+                    <option v-for="province in provinces"
+                            :value="province.provinceCode">
+                        {{province.provinceName}}
+                    </option>
+                </select>
+                <label for="city"></label>
+                <select id="city" v-model="cityIndex">
+                    <option v-for="(city, indexCity) in cities"
+                            :value="indexCity" :key="indexCity">
+                        {{city.cityName}}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="detailPosition">详细地址</label>
+                <input id="detailPosition" v-model="session.detailPosition">
+            </div>
+            <div>
+                <label for="startTime">开始时间</label>
+                <input id="startTime" v-model="session.startTime">
+            </div>
+            <input type="submit" value="提交更改">
+        </form>
+        <button @click="deleteSession(session.id)">删除场次</button>
+        <a :href="'/admin/level/'+session.id">
+            <button>修改票档</button>
+        </a>
+    </details>
+</div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            provinces: [],
+            cities: [],
+            sessions: [],
+            provinceCode: "",
+            cityIndex: "",
+            sessionToAdd: {}
+        },
+        methods: {
+            getCities: function (provinceCode) {
+                axios.get(`/getCities/${provinceCode}`).then(resp => {
+                    this.cities = resp.data;
+                })
+            },
+            updateSession: function (index) {
+                this.sessions[index].city = this.cities[this.cityIndex];
+                axios.post(`/admin/session/update`, this.sessions[index])
+            },
+            submitAddMessage: function () {
+                this.sessionToAdd.city = this.cities[this.cityIndex];
+                axios.post(window.location.href + `/add`, this.sessionToAdd)
+            },
+            deleteSession: function (sessionId) {
+                axios.delete(`/admin/session/${sessionId}`)
+            }
+        },
+        mounted: function () {
+            axios.post(window.location.href).then(resp => {
+                this.sessions = resp.data;
+            });
+            axios.get(`/getProvinces`).then(resp => {
+                this.provinces = resp.data;
+            })
+        }
+    });
+</script>
+</body>
+</html>

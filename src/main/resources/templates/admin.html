@@ -21,8 +21,8 @@
             </div>
             <div>
                 <label>是否下架：
-                    <input v-model="down" type="radio" value="true">否
-                    <input v-model="down" type="radio" value="false">下架
+                    <input v-model="down" type="radio" value="false" name="down">否
+                    <input v-model="down" type="radio" value="true" name="down">下架
                 </label>
             </div>
             <div>
@@ -61,7 +61,7 @@
                        id="AddinitialTicketNumber">
             </div>
             <div>
-                <input type="submit" value="提交修改">
+                <input type="submit" value="提交">
             </div>
         </form>
     </details>
@@ -79,10 +79,10 @@
                 <label for="details">演出介绍：</label>
                 <input v-model="product.details" id="details">
             </div>
-<!--            <div>-->
-<!--                <label for="down">是否下架：</label>-->
-<!--                <input v-model="product.down" id="down">-->
-<!--            </div>-->
+            <div>
+                <label for="down">是否下架：</label>
+                <input v-model="product.down" id="down">
+            </div>
             <div>
                 <label for="duration">演出时长：</label>
                 <input v-model="product.duration" id="duration">
