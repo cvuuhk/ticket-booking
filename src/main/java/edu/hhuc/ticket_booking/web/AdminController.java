@@ -1,4 +1,5 @@
 package edu.hhuc.ticket_booking.web;
+import edu.hhuc.ticket_booking.domain.entity.LevelSeat;
 import edu.hhuc.ticket_booking.domain.entity.Product;
 import edu.hhuc.ticket_booking.domain.entity.ProductSession;
 import edu.hhuc.ticket_booking.domain.entity.SessionLevel;
@@ -7,6 +8,7 @@ import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
 import edu.hhuc.ticket_booking.domain.repository.ProductSessionRepository;
 import edu.hhuc.ticket_booking.domain.repository.SessionLevelRepository;
 import edu.hhuc.ticket_booking.service.AdminService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @Controller
 @RequestMapping(value = "/admin")
+@Log
 public class AdminController{
     @Autowired
     AdminService             adminService;
@@ -85,6 +88,7 @@ public class AdminController{
     }
     
     @DeleteMapping(value = "/session/{sessionId}")
+    @ResponseBody
     public ResponseEntity<String> deleteSession(@PathVariable Integer sessionId){
         productSessionRepository.deleteById(sessionId);
         return new ResponseEntity<>("删除成功", HttpStatus.OK);
@@ -116,8 +120,54 @@ public class AdminController{
     }
     
     @DeleteMapping(value = "/level/{LevelId}")
+    @ResponseBody
     public ResponseEntity<String> deleteLevel(@PathVariable Integer LevelId){
         sessionLevelRepository.deleteById(LevelId);
         return new ResponseEntity<>("删除成功", HttpStatus.OK);
+    }
+    
+    @DeleteMapping(value = "/seat/{seatId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteSeat(@PathVariable Integer seatId){
+        levelSeatRepository.deleteById(seatId);
+        return new ResponseEntity<>("删除成功", HttpStatus.OK);
+    }
+    
+    @PostMapping(value = "/seat/{levelId}/{begin}/{end}")
+    @ResponseBody
+    public ResponseEntity<String> generateSeat(@PathVariable Integer levelId,
+                                               @PathVariable Integer begin,
+                                               @PathVariable Integer end){
+        log.warning("levelId:"+levelId+
+                "begin:"+begin+
+                "end:"+end);
+        LevelSeat    first = new LevelSeat();
+        SessionLevel level = sessionLevelRepository.findSessionLevelById(levelId);
+        ProductSession session = productSessionRepository
+                .findProductSessionById(level.getProductSessionId());
+        Product product = productRepository.findProductById(session.getProductId());
+        String seatDetailPre = product.getTitle()+" "
+                +session.getCity().getShortName()+"站 "
+                +session.getStartTime()
+                +level.getNameZh();
+        
+        first.setSessionLevelId(levelId);
+        first.setSeatNumber(begin);
+        String seatDetail = seatDetailPre+begin+"号座";
+        first.setDetail(seatDetail);
+        levelSeatRepository.saveAndFlush(first);
+        int currentId = first.getId();
+        currentId++;
+        
+        for(int i = begin+1; i <= end; i++){
+            LevelSeat seat = new LevelSeat();
+            seat.setId(currentId++);
+            seat.setSessionLevelId(levelId);
+            seat.setSeatNumber(i);
+            seatDetail = seatDetailPre+i+"号座";
+            seat.setDetail(seatDetail);
+            levelSeatRepository.save(seat);
+        }
+        return new ResponseEntity<>("生成成功", HttpStatus.OK);
     }
 }

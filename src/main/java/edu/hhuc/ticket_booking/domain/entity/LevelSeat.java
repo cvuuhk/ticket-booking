@@ -27,4 +27,7 @@ public class LevelSeat{
      */
     @Column(name = "detail", nullable = false)
     private String detail;
+    
+    @Column(name = "is_sold", nullable = false)
+    boolean isSold = false;
 }

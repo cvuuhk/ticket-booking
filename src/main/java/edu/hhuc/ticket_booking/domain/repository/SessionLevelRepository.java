@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface SessionLevelRepository extends JpaRepository<SessionLevel, Integer>, JpaSpecificationExecutor<SessionLevel> {
-
+    SessionLevel findSessionLevelById(Integer sessionId);
 }

@@ -27,6 +27,28 @@
             <input id="price" type="number" v-model="level.price">
             <input type="submit" value="提交修改">
         </form>
+        <details>
+            <summary>查看座位</summary>
+            <details>
+                <summary>添加座位</summary>
+                <form @submit.prevent="generateSeat(level.id)">
+                    <label for="begin">起始座位号：</label>
+                    <input id="begin" type="number" v-model="begin">
+                    <label for="end">终止座位号：</label>
+                    <input id="end" type="number" v-model="end">
+                    <input type="submit" value="自动生成">
+                </form>
+            </details>
+            <ul>
+                <li v-for="(seat, seatIndex) in level.levelSeatList"
+                    :key="seatIndex">{{seat.detail}} ,
+                    <span v-if="seat.isSold">已售出</span>
+                    <span v-if="!seat.isSold">未售出</span>
+                    <button @click="deleteSeat(seat.id)">删除</button>
+                </li>
+
+            </ul>
+        </details>
         <button @click="deleteLevel(level.id)">删除票档</button>
     </details>
 </div>
@@ -34,6 +56,8 @@
     const app = new Vue({
         el: "#app",
         data: {
+            begin: "",
+            end: "",
             levelToAdd: {},
             levels: []
         },
@@ -46,6 +70,12 @@
             },
             deleteLevel: function (levelId) {
                 axios.delete(`/admin/level/${levelId}`)
+            },
+            generateSeat: function (levelId) {
+                axios.post(`/admin/seat/${levelId}/` + this.begin + `/` + this.end);
+            },
+            deleteSeat: function (seatId) {
+                axios.delete(`/admin/seat/${seatId}`);
             }
         },
         mounted: function () {
