@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ProductSessionRepository extends JpaRepository<ProductSession, Integer>, JpaSpecificationExecutor<ProductSession> {
+    ProductSession findProductSessionById(Integer sessionID);
 
 }

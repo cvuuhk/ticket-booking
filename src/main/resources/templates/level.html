@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>修改票档</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <details>
+        <summary>添加票档</summary>
+        <form @submit.prevent="submitAddMessage">
+            <label for="addName">票档名称</label>
+            <input id="addName" v-model="levelToAdd.nameZh">
+            <label for="addPrice">票档价格</label>
+            <input id="addPrice" type="number" v-model="levelToAdd.price">
+            <input type="submit" value="添加">
+        </form>
+    </details>
+    <details v-for="(level, index) in levels" :key="index">
+        <summary>{{level.nameZh}}</summary>
+        <form @submit.prevent="updateLevel(index)">
+            <label for="name">票档名称</label>
+            <input id="name" v-model="level.nameZh">
+            <label for="price">票档价格</label>
+            <input id="price" type="number" v-model="level.price">
+            <input type="submit" value="提交修改">
+        </form>
+        <button @click="deleteLevel(level.id)">删除票档</button>
+    </details>
+</div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            levelToAdd: {},
+            levels: []
+        },
+        methods: {
+            updateLevel: function (index) {
+                axios.post(`/admin/level/update`, this.levels[index])
+            },
+            submitAddMessage: function () {
+                axios.post(window.location.href + `/add`, this.levelToAdd)
+            },
+            deleteLevel: function (levelId) {
+                axios.delete(`/admin/level/${levelId}`)
+            }
+        },
+        mounted: function () {
+            axios.post(window.location.href).then(resp => {
+                this.levels = resp.data;
+            });
+        }
+    });
+</script>
+</body>
+</html>
