@@ -33,7 +33,8 @@
             </div>
             <div>
                 <label for="addstartTime">开始时间</label>
-                <input id="addstartTime" v-model="sessionToAdd.startTime">
+                <input id="addstartTime" v-model="sessionToAdd.startTime"
+                       type="datetime-local">
             </div>
             <input type="submit" value="添加">
         </form>
@@ -64,7 +65,8 @@
             </div>
             <div>
                 <label for="startTime">开始时间</label>
-                <input id="startTime" v-model="session.startTime">
+                <input id="startTime" v-model="session.startTime"
+                       type="datetime-local">
             </div>
             <input type="submit" value="提交更改">
         </form>
@@ -92,15 +94,20 @@
                 })
             },
             updateSession: function (index) {
-                this.sessions[index].city = this.cities[this.cityIndex];
+                if (this.cities.length !== 0) {
+                    this.sessions[index].city = this.cities[this.cityIndex];
+                }
                 axios.post(`/admin/session/update`, this.sessions[index])
+                location.reload();
             },
             submitAddMessage: function () {
                 this.sessionToAdd.city = this.cities[this.cityIndex];
-                axios.post(window.location.href + `/add`, this.sessionToAdd)
+                axios.post(window.location.href + `/add`, this.sessionToAdd);
+                location.reload();
             },
             deleteSession: function (sessionId) {
                 axios.delete(`/admin/session/${sessionId}`)
+                location.reload();
             }
         },
         mounted: function () {

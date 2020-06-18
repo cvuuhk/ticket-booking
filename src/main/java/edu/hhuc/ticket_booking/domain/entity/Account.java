@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Account implements UserDetails{
      * 注册时间戳，自动生成
      */
     @Column(name = "register_time")
-    private Long registerTime;
+    private LocalDateTime registerTime;
     
     /**
      * 账户是否过期

@@ -90,6 +90,8 @@ public class AdminController{
     @ResponseBody
     public ResponseEntity<String> addSession(@PathVariable Integer productId, @RequestBody ProductSession session){
         session.setProductId(productId);
+        //LocalDateTime localDateTime = LocalDateTime.parse(session.getStartTime().toString());
+        //session.setStartTime(ZonedDateTime.of(localDateTime, ZoneId.of("Asia/Shanghai")).toEpochSecond());
         productSessionRepository.save(session);
         return new ResponseEntity<>("添加成功", HttpStatus.OK);
     }
@@ -155,8 +157,9 @@ public class AdminController{
         Product product = productRepository.findProductById(session.getProductId());
         String seatDetailPre = product.getTitle()+" "
                 +session.getCity().getShortName()+"站 "
-                +session.getStartTime()
-                +level.getNameZh();
+                +session.getStartTime()+" "
+                +level.getNameZh()+" "
+                +level.getPrice()+"元";
         
         first.setSessionLevelId(levelId);
         first.setSeatNumber(begin);

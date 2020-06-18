@@ -3,6 +3,7 @@ package edu.hhuc.ticket_booking.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class ProductSession{
     private String detailPosition = null;
     
     @Column(name = "start_time", nullable = false)
-    private Long startTime;
+    private LocalDateTime startTime;
     
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "productSessionId")
     //@JoinTable(name = "session_level",

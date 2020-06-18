@@ -64,18 +64,23 @@
         methods: {
             updateLevel: function (index) {
                 axios.post(`/admin/level/update`, this.levels[index])
+                location.reload();
             },
             submitAddMessage: function () {
                 axios.post(window.location.href + `/add`, this.levelToAdd)
+                location.reload();
             },
             deleteLevel: function (levelId) {
                 axios.delete(`/admin/level/${levelId}`)
+                location.reload();
             },
             generateSeat: function (levelId) {
                 axios.post(`/admin/seat/${levelId}/` + this.begin + `/` + this.end);
+                location.reload();
             },
             deleteSeat: function (seatId) {
                 axios.delete(`/admin/seat/${seatId}`);
+                location.reload();
             }
         },
         mounted: function () {

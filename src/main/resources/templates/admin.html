@@ -36,7 +36,7 @@
             </div>
             <div>
                 <label for="AddtrackNumber">最低演出曲目：</label>
-                <input v-model="trackNumber" id="AddtrackNumber">
+                <input v-model="trackNumber" id="AddtrackNumber" type="number">
             </div>
             <div>
                 <label for="Addsinger">主要演员：</label>
@@ -94,7 +94,7 @@
             </div>
             <div>
                 <label for="trackNumber">最低演出曲目：</label>
-                <input v-model="product.trackNumber" id="trackNumber">
+                <input v-model="product.trackNumber" id="trackNumber" type="number">
             </div>
             <div>
                 <label for="singer">主要演员：</label>
@@ -157,6 +157,7 @@
                     .then(resp => {
                         console.log("add")
                     })
+                location.reload();
             },
             submitUpdate: function (index) {
                 axios.put(`/admin`, this.products[index])
@@ -168,13 +169,15 @@
                 axios.delete(`/admin/${productId}`)
                     .then(resp => {
                         console.log(resp.data);
-                    })
+                    });
+                location.reload();
             },
             deleteProduct: function (productId) {
                 axios.delete(`/admin/delete/${productId}`)
                     .then(resp => {
                         console.log(resp.data);
-                    })
+                    });
+                location.reload();
             }
         },
         mounted: function () {

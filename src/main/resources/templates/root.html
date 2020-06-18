@@ -67,7 +67,6 @@
         },
         methods: {
             submitMessage: function () {
-                this.registerTime = new Date().getTime();
                 axios.post(`/root/`, this.$data)
                     .then(resp => {
                         console.log(resp.data);

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 @Service
 public class AccountService implements UserDetailsService{
     @Autowired
@@ -27,7 +27,7 @@ public class AccountService implements UserDetailsService{
     
     public String register(Account account){
         account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
-        account.setRegisterTime(Instant.now().toEpochMilli());
+        account.setRegisterTime(LocalDateTime.now());
         accountRepository.saveAndFlush(account);
         
         AccountRole accountRole = new AccountRole();
