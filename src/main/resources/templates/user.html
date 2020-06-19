@@ -3,8 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-
+<div id="app">
+    <div> {{account.name}}，你好！</div>
+    <form @submit.prevent="updateAccount">
+        <div>
+            <label for="name">修改昵称</label>
+            <input id="name" required v-model="account.name">
+        </div>
+        <div>
+            <label for="email">修改电子邮箱</label>
+            <input id="email" type="email" v-model="account.email">
+        </div>
+        <div>
+            <label for="password">修改密码</label>
+            <input id="password" type="password" v-model="account.password">
+        </div>
+        <input type="submit" value="提交更改">
+    </form>
+</div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            account: {}
+        },
+        methods: {
+            updateAccount: function () {
+                delete this.account.authorities;
+                axios.put(`/user`, this.account).then(resp => {
+                    this.account = resp.data;
+                })
+                location.reload();
+            }
+        },
+        mounted: function () {
+            axios.post(`/user/`).then(resp => {
+                this.account = resp.data;
+            })
+        }
+    });
+</script>
 </body>
 </html>

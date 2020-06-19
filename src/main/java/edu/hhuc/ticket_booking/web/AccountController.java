@@ -8,15 +8,19 @@ import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
 import edu.hhuc.ticket_booking.domain.repository.RealRepository;
 import edu.hhuc.ticket_booking.domain.repository.TicketRepository;
 import edu.hhuc.ticket_booking.service.AccountService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 @Controller
 @RequestMapping(value = "/user")
+@Log
 public class AccountController{
     @Autowired
     AccountService    accountService;
@@ -30,10 +34,24 @@ public class AccountController{
     ProductRepository productRepository;
     
     @GetMapping(value = "")
-    public String initUser(){return "user";}
+    public String initUser(){ return "user"; }
+    
+    private Integer accountId = null;
+    @PostMapping(value = "")
+    @ResponseBody
+    public ResponseEntity<Account> getUser(Principal principal){
+        if(accountId != null){ return new ResponseEntity<>(accountRepository.findAccountById(accountId), HttpStatus.OK); }
+        Account account = accountRepository.findAccountByName(principal.getName());
+        accountId = account.getId();
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
     
     @PutMapping(value = "")
     public void updateUser(@RequestBody Account account){
+        Account old = accountRepository.findAccountById(account.getId());
+        if(!old.getPassword().equals(account.getPassword())){
+            account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
+        }
         accountRepository.save(account);
     }
     

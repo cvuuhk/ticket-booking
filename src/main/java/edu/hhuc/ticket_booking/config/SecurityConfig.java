@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception{
         http.authorizeRequests() // 开启 HttpSecurity 配置
                 .antMatchers("/", "/register", "/product/**").permitAll()
-                .antMatchers("/user/**", "/buy/**", "/hello").hasRole("user")
+                .antMatchers("/user/**", "/buy/**").hasRole("user")
                 .antMatchers("/root/**").hasRole("root")
                 .antMatchers("/admin/**").hasRole("admin")
                 .anyRequest().authenticated() // 用户访问其它URL都必须认证后访问（登录后访问）
