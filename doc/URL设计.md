@@ -16,10 +16,10 @@
 | /user                | user     | get    | 访问用户个人信息页面                         |
 | /user                | user     | put    | 更新用户个人信息                             |
 | /user/unregister     | user     | post   | 删除账户，要求密码验证                       |
-| /user/real           | user     | get    | 访问实名认证页面                             |
-| /user/real           | user     | post   | 新建实名认证信息                             |
-| /user/real           | user     | put    | 更新实名认证信息                             |
-| /user/real           | user     | delete | 删除实名认证信息                             |
+| /user/accountReal           | user     | get    | 访问实名认证页面                             |
+| /user/accountReal           | user     | post   | 新建实名认证信息                             |
+| /user/accountReal           | user     | put    | 更新实名认证信息                             |
+| /user/accountReal           | user     | delete | 删除实名认证信息                             |
 | /user/buy            | user     | get    | 进行选座等操作                               |
 | /user/buy            | user     | post   | 提交订单信息，要求密码验证                   |
 | /user/ticket         | user     | get    | 查看订单列表                                 |

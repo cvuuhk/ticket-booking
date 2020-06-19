@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>用户信息界面</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
@@ -24,12 +24,53 @@
         </div>
         <input type="submit" value="提交更改">
     </form>
+    <details @toggle="initReals(account.id)">
+        <summary>购票人信息</summary>
+        <details>
+            <summary>添加购票人</summary>
+            <form @submit.prevent="submitAddMessage">
+                <div>
+                    <label for="realNameToAdd">真实姓名</label>
+                    <input v-model="realToAdd.realName" id="realNameToAdd">
+                </div>
+                <div>
+                    <label for="idCardNumberToAdd">证件号</label>
+                    <input v-model="realToAdd.idCardNumber"
+                           id="idCardNumberToAdd">
+                </div>
+                <input type="submit" value="添加">
+            </form>
+        </details>
+        <details v-for="(accountReal, index) in reals" :key="index">
+            <summary>{{accountReal.realName}}</summary>
+            <form @submit.prevent="updateReal(index)">
+                <div>
+                    <label for="realName">真实姓名</label>
+                    <input v-model="accountReal.realName" id="realName">
+                </div>
+                <div>
+                    <label for="idCardNumber">证件号</label>
+                    <input v-model="accountReal.idCardNumber"
+                           id="idCardNumber">
+                </div>
+                <input type="submit" value="修改">
+            </form>
+            <button @click="deleteReal(accountReal.id)">删除购票人</button>
+        </details>
+    </details>
 </div>
 <script>
     const app = new Vue({
         el: "#app",
         data: {
-            account: {}
+            account: {},
+            reals: [],
+            realToAdd: {
+                accountId: "",
+                realName: "",
+                idCardType: 1,
+                idCardNumber: ""
+            }
         },
         methods: {
             updateAccount: function () {
@@ -38,12 +79,31 @@
                     this.account = resp.data;
                 })
                 location.reload();
+            },
+            submitAddMessage: function () {
+                this.realToAdd.accountId = this.account.id;
+                axios.post(`/user/accountReal`, this.realToAdd)
+                location.reload();
+            },
+            initReals: function (accountId) {
+                axios.get(`/user/accountReal/${accountId}`).then(resp => {
+                    this.reals = resp.data;
+                })
+            },
+            updateReal: function (realIndex) {
+                axios.put(`/user/accountReal`, this.reals[realIndex]);
+                location.reload();
+            },
+            deleteReal: function (realId) {
+                axios.delete(`/user/accountReal/${realId}`);
+                location.reload();
             }
         },
         mounted: function () {
             axios.post(`/user/`).then(resp => {
                 this.account = resp.data;
-            })
+            });
+
         }
     });
 </script>

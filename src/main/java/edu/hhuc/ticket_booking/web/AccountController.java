@@ -1,11 +1,11 @@
 package edu.hhuc.ticket_booking.web;
 import edu.hhuc.ticket_booking.domain.entity.Account;
+import edu.hhuc.ticket_booking.domain.entity.AccountReal;
 import edu.hhuc.ticket_booking.domain.entity.Product;
-import edu.hhuc.ticket_booking.domain.entity.Real;
 import edu.hhuc.ticket_booking.domain.entity.Ticket;
 import edu.hhuc.ticket_booking.domain.repository.AccountRepository;
 import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
-import edu.hhuc.ticket_booking.domain.repository.RealRepository;
+import edu.hhuc.ticket_booking.domain.repository.AccountRealRepository;
 import edu.hhuc.ticket_booking.domain.repository.TicketRepository;
 import edu.hhuc.ticket_booking.service.AccountService;
 import lombok.extern.java.Log;
@@ -23,15 +23,15 @@ import java.util.List;
 @Log
 public class AccountController{
     @Autowired
-    AccountService    accountService;
+    AccountService        accountService;
     @Autowired
-    AccountRepository accountRepository;
+    AccountRepository     accountRepository;
     @Autowired
-    RealRepository    realRepository;
+    AccountRealRepository accountRealRepository;
     @Autowired
-    TicketRepository  ticketRepository;
+    TicketRepository      ticketRepository;
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository     productRepository;
     
     @GetMapping(value = "")
     public String initUser(){ return "user"; }
@@ -40,7 +40,9 @@ public class AccountController{
     @PostMapping(value = "")
     @ResponseBody
     public ResponseEntity<Account> getUser(Principal principal){
-        if(accountId != null){ return new ResponseEntity<>(accountRepository.findAccountById(accountId), HttpStatus.OK); }
+        if(accountId != null){
+            return new ResponseEntity<>(accountRepository.findAccountById(accountId), HttpStatus.OK);
+        }
         Account account = accountRepository.findAccountByName(principal.getName());
         accountId = account.getId();
         return new ResponseEntity<>(account, HttpStatus.OK);
@@ -61,22 +63,28 @@ public class AccountController{
         accountRepository.save(account);
     }
     
-    @GetMapping(value = "/real")
-    public String initReal(){return "real";}
-    
-    @PostMapping(value = "/real")
-    public void addReal(@RequestBody Real real){
-        realRepository.save(real);
+    @GetMapping(value = "/accountReal/{accountId}")
+    public ResponseEntity<List<AccountReal>> initReal(@PathVariable Integer accountId){
+        List<AccountReal> accountRealList = accountRealRepository.findRealsByAccountId(accountId);
+        return new ResponseEntity<>(accountRealList, HttpStatus.OK);
     }
     
-    @PutMapping(value = "/real")
-    public void updateReal(@RequestBody Real real){
-        realRepository.save(real);
+    @PostMapping(value = "/accountReal")
+    public ResponseEntity<String> addReal(@RequestBody AccountReal accountReal){
+        accountRealRepository.save(accountReal);
+        return new ResponseEntity<>("添加成功", HttpStatus.OK);
     }
     
-    @DeleteMapping(value = "/real")
-    public void deleteReal(@RequestBody Integer id){
-        realRepository.deleteById(id);
+    @PutMapping(value = "/accountReal")
+    public ResponseEntity<String> updateReal(@RequestBody AccountReal accountReal){
+        accountRealRepository.save(accountReal);
+        return new ResponseEntity<>("修改成功", HttpStatus.OK);
+    }
+    
+    @DeleteMapping(value = "/accountReal/{id}")
+    public ResponseEntity<String> deleteReal(@PathVariable Integer id){
+        accountRealRepository.deleteById(id);
+        return new ResponseEntity<>("删除成功", HttpStatus.OK);
     }
     
     @GetMapping(value = "/buy")
