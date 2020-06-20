@@ -1,11 +1,10 @@
 package edu.hhuc.ticket_booking.web;
 import edu.hhuc.ticket_booking.domain.entity.Account;
 import edu.hhuc.ticket_booking.domain.entity.AccountReal;
-import edu.hhuc.ticket_booking.domain.entity.Product;
 import edu.hhuc.ticket_booking.domain.entity.Ticket;
+import edu.hhuc.ticket_booking.domain.repository.AccountRealRepository;
 import edu.hhuc.ticket_booking.domain.repository.AccountRepository;
 import edu.hhuc.ticket_booking.domain.repository.ProductRepository;
-import edu.hhuc.ticket_booking.domain.repository.AccountRealRepository;
 import edu.hhuc.ticket_booking.domain.repository.TicketRepository;
 import edu.hhuc.ticket_booking.service.AccountService;
 import lombok.extern.java.Log;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 @Controller
 @RequestMapping(value = "/user")
@@ -64,38 +64,54 @@ public class AccountController{
     }
     
     @GetMapping(value = "/accountReal/{accountId}")
+    @ResponseBody
     public ResponseEntity<List<AccountReal>> initReal(@PathVariable Integer accountId){
         List<AccountReal> accountRealList = accountRealRepository.findRealsByAccountId(accountId);
         return new ResponseEntity<>(accountRealList, HttpStatus.OK);
     }
     
+    @GetMapping(value = "/accountReal/buy")
+    @ResponseBody
+    public ResponseEntity<List<AccountReal>> initRealForBuy(Principal principal){
+        if(accountId == null){
+            accountId = accountRepository.findAccountByName(principal.getName()).getId();
+        }
+        List<AccountReal> accountRealList = accountRealRepository.findRealsByAccountId(accountId);
+        return new ResponseEntity<>(accountRealList, HttpStatus.OK);
+    }
+    
     @PostMapping(value = "/accountReal")
+    @ResponseBody
     public ResponseEntity<String> addReal(@RequestBody AccountReal accountReal){
         accountRealRepository.save(accountReal);
         return new ResponseEntity<>("添加成功", HttpStatus.OK);
     }
     
     @PutMapping(value = "/accountReal")
+    @ResponseBody
     public ResponseEntity<String> updateReal(@RequestBody AccountReal accountReal){
         accountRealRepository.save(accountReal);
         return new ResponseEntity<>("修改成功", HttpStatus.OK);
     }
     
     @DeleteMapping(value = "/accountReal/{id}")
+    @ResponseBody
     public ResponseEntity<String> deleteReal(@PathVariable Integer id){
         accountRealRepository.deleteById(id);
         return new ResponseEntity<>("删除成功", HttpStatus.OK);
     }
     
-    @GetMapping(value = "/buy")
-    @ResponseBody
-    public ResponseEntity<Product> initBuy(@RequestBody Integer productId){
-        return new ResponseEntity<>(productRepository.findProductById(productId), HttpStatus.OK);
+    @GetMapping(value = "/buy/{productId}")
+    public String initBuy(@PathVariable Integer productId){
+        return "buy";
     }
     
     @PostMapping(value = "/buy")
-    public void buy(@RequestBody Ticket ticket){
+    public ResponseEntity<String> buy(@RequestBody Ticket ticket){
+        ticket.setAccountId(accountId);
+        ticket.setCreateTime(LocalDateTime.now());
         ticketRepository.save(ticket);
+        return new ResponseEntity<>("下单成功", HttpStatus.OK);
     }
     
     @PostMapping(value = "/ticket")

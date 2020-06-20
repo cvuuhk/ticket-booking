@@ -40,6 +40,4 @@ public class Ticket {
 
     @Column(name = "level_seat_id", nullable = false)
     private Integer levelSeatId;
-
-    
 }

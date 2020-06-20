@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>购买</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>演出介绍：{{product.details}}</div>
+    <div>演出时长：{{product.duration}}</div>
+    <div>入场时间：{{product.startTime}}</div>
+    <div>最低演出曲目：{{product.trackNumber}}</div>
+    <div>主要演员：{{product.singer}}</div>
+    <div>最低演出时长：{{product.minimumDuration}}</div>
+    <div>禁止携带物品：{{product.prohibitedItem}}</div>
+    <div>寄存说明：{{product.depositInstructions}}</div>
+    <div>初始开售时全场可售门票总张数：{{product.initialTicketNumber}}</div>
+    <h2>填写订单信息</h2>
+    <form @submit.prevent="submitTicket">
+        <div>
+            <h4>填写门票信息</h4>
+            <label for="session">选择场次：</label>
+            <select @change="getLevels(sessionIndex)" v-model="sessionIndex"
+                    id="session">
+                <option v-for="(session, index) in sessions" :value="index">
+                    {{session.city.shortName}}站,
+                    {{session.detailPosition}},
+                    开始时间：{{session.startTime}}
+                </option>
+            </select>
+            <label for="level">选择票档：</label>
+            <select v-model="levelIndex" @change="getSeats(levelIndex)"
+                    id="level">
+                <option v-for="(level, Lindex) in levels" :value="Lindex">
+                    {{level.nameZh}},
+                    {{level.price}}元
+                </option>
+            </select>
+            <label for="seat">选择座位：</label>
+            <select v-model="seatId" required id="seat">
+                <option v-for="seat in seats" :value="seat.id">
+                    {{seat.seatNumber}}号座
+                </option>
+            </select>
+        </div>
+        <div>
+            <h4>填写收货地址</h4>
+            <label for="province">省</label>
+            <select id="province" v-model="provinceCode"
+                    @change="getCitiesByProvinceCode(provinceCode)">
+                <option :value="province.provinceCode"
+                        v-for="province in provinces">{{province.provinceName}}
+                </option>
+            </select>
+            <label for="city">市</label>
+            <select id="city" v-model="cityCode"
+                    @change="getAreasByCityCode(cityCode)">
+                <option :value="city.cityCode"
+                        v-for="city in cities"> {{city.cityName}}
+                </option>
+            </select>
+            <label for="area">区</label>
+            <select id="area" v-model="areaCode"
+                    @change="getStreetsByAreaCode(areaCode)">
+                <option :value="area.areaCode"
+                        v-for="area in areas">{{area.areaName}}
+                </option>
+            </select>
+            <label for="street">街道</label>
+            <select id="street" v-model="streetId" required>
+                <option :value="street.streetId"
+                        v-for="street in streets">{{street.streetName}}
+                </option>
+            </select>
+            <label for="detail">详细地址（可不填）</label>
+            <input id="detail" v-model="detailAddress">
+        </div>
+        <div>
+            <h4>选择购票人</h4>
+            <label for="real"></label>
+            <select v-model="realName" required id="real">
+                <option v-for="real in reals" :value="real.realName">
+                    {{real.realName}}
+                </option>
+            </select>
+            <label for="email">电子邮件</label>
+            <input id="email" v-model="receiverEmail" type="email">
+        </div>
+        <input type="submit" value="提交订单">
+    </form>
+</div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            provinceCode: "", cityCode: "", areaCode: "", streetCode: "",
+            provinces: [], cities: [], areas: [], streets: [],
+            streetId: "",
+            product: {},
+            sessions: [],
+            sessionIndex: "",
+            levels: [],
+            levelIndex: "",
+            seats: [],
+            seatId: "",
+            accountReals: [],
+            reals: [],
+            realName: "",
+            detailAddress: "",
+            receiverEmail: "",
+            ticketToAdd: {}
+        },
+        methods: {
+            getLevels: function (sessionIndex) {
+                this.levels = this.sessions[sessionIndex].sessionLevelList;
+            },
+            getSeats: function (levelIndex) {
+                this.seats = this.levels[levelIndex].levelSeatList;
+            },
+            getCitiesByProvinceCode: function (provinceCode) {
+                axios.get(`/getCities/${provinceCode}`).then(resp => {
+                    this.cities = resp.data;
+                })
+            },
+            getAreasByCityCode: function (cityCode) {
+                axios.get(`/getAreas/${cityCode}`).then(resp => {
+                    this.areas = resp.data;
+                })
+            },
+            getStreetsByAreaCode: function (areaCode) {
+                axios.get(`/getStreets/${areaCode}`).then(resp => {
+                    this.streets = resp.data;
+                })
+            },
+            submitTicket: function () {
+                this.ticketToAdd.realName = this.realName;
+                this.ticketToAdd.accountId = "";
+                this.ticketToAdd.createTime = "";
+                this.ticketToAdd.status = 1
+                this.ticketToAdd.receiveAddress = this.streetId;
+                this.ticketToAdd.receiverEmail = this.receiverEmail;
+                this.ticketToAdd.detailAddress = this.detailAddress;
+                this.ticketToAdd.levelSeatId = this.seatId;
+                axios.post(`/user/buy`, this.ticketToAdd).then(resp => {
+                    alert(resp.data);
+                    location.reload();
+                });
+            }
+        },
+        mounted: function () {
+            let url = window.location.href;
+            let productId = url.substring(url.lastIndexOf("/") + 1);
+            axios.get(`/product/${productId}`).then(resp => {
+                this.product = resp.data;
+                this.sessions = this.product.productSessionList;
+            });
+            axios.get(`/getProvinces`).then(resp => {
+                this.provinces = resp.data;
+            });
+            axios.get(`/user/accountReal/buy`).then(resp => {
+                this.reals = resp.data;
+            })
+        }
+    });
+</script>
+</body>
+</html>

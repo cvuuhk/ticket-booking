@@ -10,9 +10,23 @@
 <div id="app">
     <details v-for="product in products">
         <summary>{{product.title}}</summary>
+        <div> 演出介绍：{{product.details}}</div>
+        <div>演出时长：{{product.duration}}</div>
+        <div>入场时间：{{product.startTime}}</div>
+        <div>最低演出曲目：{{product.trackNumber}}</div>
+        <div>主要演员：{{product.singer}}</div>
+        <div>最低演出时长：{{product.minimumDuration}}</div>
+        <div>禁止携带物品：{{product.prohibitedItem}}</div>
+        <div>寄存说明：{{product.depositInstructions}}</div>
+        <div>初始开售时全场可售门票总张数：{{product.initialTicketNumber}}</div>
+        <a :href="'/user/buy/'+product.id">
+            <button>购买</button>
+        </a>
     </details>
 </div>
-<a href="/user/"><button>更改用户信息</button></a>
+<a href="/user/">
+    <button>更改用户信息</button>
+</a>
 <script>
     const app = new Vue({
         el: "#app",
